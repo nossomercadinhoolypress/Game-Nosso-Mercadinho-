@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Nosso Mercadinho Olypress</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #000;
+      color: #fff;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    body.light-theme {
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: #000;
+      color: #f7931e;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    body.light-theme header {
+      background-color: #f7931e;
+      color: #000;
+    }
+
+    h1, h2, h3 {
+      margin-bottom: 15px;
+    }
+
+    .tela {
+      display: none;
+      flex: 1;
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .ativo {
+      display: flex;
+      animation: fadeIn 0.5s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .btn, .produto, .pagamento {
+      background-color: #f7931e;
+      border: none;
+      padding: 12px 20px;
+      margin: 10px 5px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #000;
+      text-align: center;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    @media (min-width: 768px) {
+      .btn, .produto, .pagamento {
+        width: auto;
+        min-width: 200px;
+      }
+    }
+
+    .btn:hover, .produto:hover, .pagamento:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .categoria {
+      font-weight: bold;
+      color: #f7931e;
+      margin: 20px 0 10px;
+      font-size: 1.1em;
+      width: 100%;
+      max-width: 600px;
+      text-align: left;
+    }
+
+    body.light-theme .categoria {
+      color: #d67c0a;
+    }
+
+    .produtos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+}
+
+    .sacola-item {
+      background: #111;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    body.light-theme .sacola-item {
+      background: #eee;
+    }
+
+    .contador-sacola {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: #e74c3c;
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .notificacao {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #27ae60;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      animation: slideIn 0.5s, fadeOut 0.5s 2.5s forwards;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 300px;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
+    .btn-tema {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: transparent;
+      border: none;
+      color: #f7931e;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+
+    body.light-theme .btn-tema {
+      color: #000;
+    }
+
+    #progresso-escaneamento {
+      font-weight: bold;
+      margin: 15px 0;
+      color: #f7931e;
+    }
+
+    .produto-escaneado {
+      background-color: #4CAF50 !important;
+      color: white !important;
+    }
+
+    .total-compra {
+      font-size: 1.3em;
+      margin: 20px 0;
+      font-weight: bold;
+      color: #f7931e;
+    }
+
+    #relogio {
+      position: absolute;
+      top: 20px;
+      right: 60px;
+      font-size: 1em;
+    }
+
+    .assistente {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #f7931e;
+      color: #000;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+      cursor: pointer;
+      z-index: 90;
+    }
+
+    .balao {
+      position: absolute;
+      bottom: 70px;
+      right: 0;
+      background-color: #000;
+      color: #fff;
+      padding: 10px 15px;
+      border-radius: 10px;
+      max-width: 200px;
+      display: none;
+    }
+
+    body.light-theme .balao {
+      background-color: #fff;
+      color: #000;
+      border: 1px solid #f7931e;
+    }
+
+    .assistente:hover .balao {
+      display: block;
+      animation: fadeIn 0.3s;
+    }
+
+    .flutuante-sacola {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #f7931e;
+      color: #000;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+      cursor: pointer;
+      z-index: 90;
+    }
+
+    .tooltip-sacola {
+      position: absolute;
+      bottom: 70px;
+      left: 0;
+      background-color: #000;
+      color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      width: 250px;
+      display: none;
+    }
+
+    body.light-theme .tooltip-sacola {
+      background-color: #fff;
+      color: #000;
+      border: 1px solid #f7931e;
+    }
+
+    .flutuante-sacola:hover .tooltip-sacola {
+      display: block;
+      animation: fadeIn 0.3s;
+    }
+
+    .feedback-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #000;
+      color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      z-index: 1000;
+      max-width: 90%;
+      width: 400px;
+      text-align: center;
+      border: 2px solid #f7931e;
+      display: none;
+    }
+
+    body.light-theme .feedback-popup {
+      background-color: #fff;
+      color: #000;
+    }
+
+    .feedback-popup .btn {
+      margin: 15px 5px 0;
+      display: inline-block;
+      width: auto;
+    }
+
+    .social-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .social-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 15px;
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    .social-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .btn-instagram {
+      background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+    }
+
+    .btn-whatsapp {
+      background-color: #25D366;
+    }
+
+    .btn-franquia {
+      background-color: #f7931e;
+      color: #000;
+    }
+
+    .btn-condominio {
+      background-color: #3498db;
+    }
+  
+@media (max-width: 480px) {
+  .btn, .produto, .pagamento {
+    font-size: 1em;
+    padding: 14px;
+    margin: 8px auto;
+  }
+
+  h1, h2, h3 {
+    font-size: 1.2em;
+  }
+
+  .container {
+    padding: 10px;
+  }
+
+  .social-btn {
+    flex: 1 1 100%;
+  }
+
+  .flutuante-sacola {
+    bottom: 80px;
+    left: 15px;
+  }
+
+  .assistente {
+    bottom: 80px;
+    right: 15px;
+  }
+}
+
+body {
+  line-height: 1.8;
+  letter-spacing: 0.5px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+.produto.adicionado {
+  background-color: #4CAF50 !important;
+  color: #fff !important;
+}
+.accordion {
+  background-color: #f7931e;
+  color: #000;
+  cursor: pointer;
+  padding: 14px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 1em;
+  border-radius: 8px;
+  margin: 5px 0;
+  font-weight: bold;
+}
+.accordion.active, .accordion:hover {
+  background-color: #e67e22;
+}
+.panel {
+  padding: 0 10px;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.tela, .btn, .produto, .pagamento, .accordion, .panel {
+  transition: all 0.3s ease-in-out;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<button class="btn-tema" onclick="alternarTema()"><i class="fas fa-moon"></i></button>
+<div id="relogio"></div>
+<header>
+<h1>NOSSO MERCADINHO OLYPRESS</h1>
+<p>Rede de Mercados Autônomos 24h — Franquia com propósito.</p>
+<div class="contador-sacola" id="contador-sacola">0</div>
+</header>
+<div class="tela ativo" id="entrada">
+<div>
+<h2 style="font-size: 1.5em; margin-bottom: 20px;">SEJA BEM-VINDO AO NOSSO MERCADINHO OLYPRESS</h2>
+<p style="font-size: 1.1em; line-height: 1.8; margin-bottom: 30px; text-align: center;">
+Aqui, a confiança vem antes da tecnologia.<br/><br/>
+Não é preciso senha, reconhecimento facial ou cadastro.<br/><br/>
+<strong style="font-weight: bold; color: #f7931e;">É só entrar, escolher, pagar... e voltar sempre que quiser.</strong>
+</p>
+<button class="btn" onclick="iniciarExperiencia()"><i class="fas fa-shopping-basket"></i> ENTRAR NA LOJA</button>
+</div>
+</div>
+<div class="tela" id="produtos">
+<div>
+<h3>ESCOLHA SEUS PRODUTOS</h3>
+<div class="produtos-grid">
+<button class="accordion">BEBIDAS</button>
+<div class="panel">
+<button class="produto" onclick="adicionarProduto('Coca-Cola Lata', 5.50)">Coca-Cola - R$ 5,50</button><button class="produto" onclick="adicionarProduto('Água sem gás', 3.00)">💧 Água sem gás - R$ 3,00</button><button class="produto" onclick="adicionarProduto('Suco de Uva', 6.90)">🍇 Suco de Uva - R$ 6,90</button>
+</div>
+<button class="accordion">SNACKS</button>
+<div class="panel">
+<button class="produto" onclick="adicionarProduto('Doritos', 8.50)">🔶 Doritos - R$ 8,50</button><button class="produto" onclick="adicionarProduto('Cheetos', 7.90)">🧀 Cheetos - R$ 7,90</button>
+</div>
+<button class="accordion">DOCES</button>
+<div class="panel">
+<button class="produto" onclick="adicionarProduto('Fini', 2.50)">🍬 Fini - R$ 2,50</button><button class="produto" onclick="adicionarProduto('KitKat', 4.90)">🍫 KitKat - R$ 4,90</button>
+</div>
+<button class="accordion">PADARIA</button>
+<div class="panel">
+<button class="produto" onclick="adicionarProduto('Pão de forma', 9.90)">🍞 Pão de forma - R$ 9,90</button><button class="produto" onclick="adicionarProduto('Café Solúvel', 12.50)">☕ Café Solúvel - R$ 12,50</button>
+</div>
+</div>
+<button class="btn" onclick="mostrar('caixa')"><i class="fas fa-cash-register"></i> IR PARA O CAIXA</button>
+</div>
+</div>
+<div class="tela" id="caixa">
+<div>
+<h3><i class="fas fa-barcode"></i> CAIXA AUTOMÁTICO</h3>
+<p>Clique em cada item para escanear o código de barras</p>
+<div id="progresso-escaneamento">0 de 0 produtos escaneados</div>
+<div id="escaneamento" style="width: 100%; max-width: 500px;"></div>
+<button class="btn" id="btnPagamento" onclick="mostrar('pagamento')" style="display:none;"><i class="fas fa-credit-card"></i> PAGAMENTO</button>
+</div>
+</div>
+<div class="tela" id="pagamento">
+<div>
+<h3><i class="fas fa-wallet"></i> FORMA DE PAGAMENTO</h3>
+<div class="total-compra">TOTAL: R$ <span id="total-pagamento">0.00</span></div>
+<button class="pagamento" onclick="finalizarCompra('PIX')"><i class="fas fa-qrcode"></i> PIX</button>
+<button class="pagamento" onclick="finalizarCompra('DÉBITO')"><i class="fas fa-credit-card"></i> DÉBITO</button>
+<button class="pagamento" onclick="finalizarCompra('CRÉDITO')"><i class="fas fa-credit-card"></i> CRÉDITO</button>
+<button class="pagamento" onclick="finalizarCompra('DINHEIRO')"><i class="fas fa-money-bill-wave"></i> DINHEIRO</button>
+</div>
+</div>
+<div class="tela" id="final">
+<div>
+<h3><i class="fas fa-check-circle"></i> COMPRA FINALIZADA!</h3>
+<p>Obrigado por comprar no Nosso Mercadinho Olypress</p>
+<div class="total-compra">
+          Total: R$ <span id="total-final">0.00</span> (<span id="metodo-pagamento">PIX</span>)
+        </div>
+<div id="sacola" style="width: 100%; max-width: 500px;"></div><p style="margin-top: 20px; font-style: italic; font-size: 0.9em; color: #ccc;">Tire um print desta tela e compartilhe nos seus Stories marcando @nossomercadinhoolypress!</p><p id="tempo-final" style="margin-top: 10px; font-weight: bold; color: #f7931e;"></p>
+<button class="btn" onclick="reiniciar()"><i class="fas fa-redo"></i> NOVA COMPRA</button>
+<div id="sugestao-produto" style="margin-top:20px; font-size:1em; color:#f7931e; font-weight:bold;"></div>
+<div style="margin-top: 40px; text-align: center;">
+<p style="font-size: 1.2em; font-weight: bold;">Gostou da experiência?</p>
+<p>Compartilhe com um amigo ou desafie alguém a comprar também!</p>
+</div>
+<div style="margin-top: 40px; text-align: center;">
+<p style="font-size: 1.2em; font-weight: bold;">Gostou da experiência?</p>
+<p>Compartilhe em suas redes sociais favoritas:</p>
+<div class="social-buttons">
+<a class="social-btn btn-whatsapp" href="https://wa.me/?text=Experimente%20o%20Nosso%20Mercadinho%20Olypress:%20https://nossomercadinhoolypress.github.io/Game-Nosso-Mercadinho-/" target="_blank">
+<i class="fab fa-whatsapp"></i> WhatsApp
+    </a>
+<a class="social-btn btn-condominio" href="https://www.facebook.com/sharer/sharer.php?u=https://nossomercadinhoolypress.github.io/Game-Nosso-Mercadinho-/" target="_blank">
+<i class="fab fa-facebook-f"></i> Facebook
+    </a>
+<a class="social-btn btn-franquia" href="https://twitter.com/intent/tweet?text=Experimente%20o%20mercadinho%20autônomo!&amp;url=https://nossomercadinhoolypress.github.io/Game-Nosso-Mercadinho-/" target="_blank">
+<i class="fab fa-twitter"></i> Twitter
+    </a>
+<a class="social-btn btn-franquia" href="https://www.linkedin.com/sharing/share-offsite/?url=https://nossomercadinhoolypress.github.io/Game-Nosso-Mercadinho-/" target="_blank">
+<i class="fab fa-linkedin-in"></i> LinkedIn
+    </a>
+<button class="social-btn btn-franquia" onclick="copiarLink()">
+<i class="fas fa-link"></i> Copiar link do jogo
+    </button>
+</div>
+</div>
+<div style="margin-top: 50px; text-align: center;">
+<p style="font-size: 1.2em; font-weight: bold;">Leve essa experiência para mais pessoas!</p>
+<p>Indique o Nosso Mercadinho Olypress para seu condomínio ou torne-se um franqueado:</p>
+<div class="social-buttons">
+<a class="social-btn btn-condominio" href="https://wa.me/5519996600929?text=Gostaria%20de%20ter%20o%20Nosso%20Mercadinho%20Olypress%20no%20meu%20condom%C3%ADnio" target="_blank">
+<i class="fas fa-home"></i> Quero no meu condomínio
+    </a>
+<a class="social-btn btn-franquia" href="https://wa.me/5519996600929?text=Tenho%20interesse%20em%20ser%20franqueado%20do%20Nosso%20Mercadinho%20Olypress" target="_blank">
+<i class="fas fa-store"></i> Seja franqueado
+    </a>
+<a class="social-btn btn-whatsapp" href="https://wa.me/?text=Indico%20o%20Nosso%20Mercadinho%20Olypress%20para%20quem%20valoriza%20autonomia%20e%20conveni%C3%AAncia!%20Veja:%20https://nossomercadinhoolypress.github.io/Game-Nosso-Mercadinho-/" target="_blank">
+<i class="fas fa-share-alt"></i> Indicar para alguém
+    </a>
+</div>
+</div>
+<div id="avaliacao-final" style="margin-top: 50px; text-align: center;">
+<p style="font-size: 1.2em; font-weight: bold;">O que você mais gostou dessa experiência?</p>
+<div style="margin-top: 10px;">
+<button class="btn" onclick="compartilharOpiniao('A facilidade de comprar')">☑ A facilidade de comprar</button>
+<button class="btn" onclick="compartilharOpiniao('A ideia do mercadinho autônomo')">☑ A ideia do mercadinho autônomo</button>
+<button class="btn" onclick="compartilharOpiniao('Tudo! É incrível.')">☑ Tudo! É incrível.</button>
+</div>
+<div id="bloco-compartilhamento" style="display:none; margin-top: 30px;">
+<p>Compartilhe sua opinião nas redes sociais:</p>
+<div class="social-buttons">
+<a class="social-btn btn-whatsapp" id="whatsapp-link" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+<a class="social-btn btn-condominio" id="facebook-link" target="_blank"><i class="fab fa-facebook-f"></i> Facebook</a>
+<a class="social-btn btn-franquia" id="twitter-link" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+</div>
+<div style="margin-top:20px;">
+<p style="font-weight: bold;">Para compartilhar no Instagram:</p>
+<textarea id="instagram-texto" style="width:90%; max-width:400px; height:80px; padding:10px; border-radius:8px;">Acabei de comprar no Nosso Mercadinho Olypress. O que mais gostei? [OPINIAO]. Você precisa experimentar também! @nossomercadinhoolypress</textarea>
+<br/>
+<button class="btn" onclick="copiarTextoInstagram()">Copiar texto</button>
+<p style="font-size: 0.9em; margin-top: 10px;">Cole nos seus Stories ou envie por Direct no Instagram e marque <strong>@nossomercadinhoolypress</strong></p>
+
+<div style="margin-top: 60px; text-align: center;">
+  <p style="font-size: 1.3em; font-weight: bold;">Desafie um amigo!</p>
+  <p>Mostre a ele como é fácil comprar no Nosso Mercadinho Olypress.</p>
+  <a class="social-btn btn-whatsapp" href="https://wa.me/?text=Fiz%20minha%20compra%20no%20Nosso%20Mercadinho%20Olypress!%20Tente%20também:%20https://nossomercadinhoolypress.github.io/Game-Nosso-Mercadinho-/" target="_blank" style="margin-top: 10px;">
+    <i class="fab fa-whatsapp"></i> Desafie um amigo
+  </a>
+</div>
+
+<div style="margin-top: 40px; text-align: center;">
+  <p style="font-size: 1.3em; font-weight: bold;">Nos siga no Instagram</p>
+  <p>Acompanhe nossa trajetória e novidades!</p>
+  <a class="social-btn btn-instagram" href="https://www.instagram.com/olypressnossomercadinho?igsh=MTN3ZTJ2N3V4b2xm" target="_blank" style="margin-top: 10px;">
+    <i class="fab fa-instagram"></i> Instagram
+  </a>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flutuante-sacola">
+<i class="fas fa-shopping-basket"></i>
+<div class="tooltip-sacola">
+<div id="tooltip-itens" style="max-height: 200px; overflow-y: auto;"></div>
+<hr style="margin: 10px 0; border-color: #f7931e;"/>
+<strong>Total: R$ <span id="tooltip-total">0.00</span></strong>
+</div>
+</div>
+<div class="assistente">
+<i class="fas fa-robot"></i>
+<div class="balao" id="mensagem-assistente">Olá! Posso ajudar?</div>
+</div>
+<div class="feedback-popup" id="feedbackPopup">
+<h3>Achou fácil comprar?</h3>
+<p id="fraseFeedback">No Nosso Mercadinho Olypress é tão simples quanto esse jogo!</p>
+<button class="btn" onclick="fecharFeedback()"><i class="fas fa-thumbs-up"></i> FECHAR</button>
+</div>
+<audio id="som-adicionar" src="data:audio/mpeg;base64,SUQzBAAAAAAA..."></audio>
+<audio id="som-escaneamento" src="data:audio/mpeg;base64,SUQzBAAAAAAA..."></audio>
+<audio id="som-pagamento" src="data:audio/mpeg;base64,SUQzBAAAAAAA..."></audio>
+<script>
+    // Variáveis globais
+    let carrinho = [];
+    let escaneados = [];
+    let total = 0;
+    let metodoPagamento = 'PIX';
+    let nomeCliente = '';
+    
+    // Frases para o feedback
+    const frasesFeedback = [
+      "No Nosso Mercadinho Olypress é tão simples quanto esse jogo!",
+      "Simplicidade e praticidade é o que oferecemos todos os dias!",
+      "Na vida real é ainda mais fácil que no jogo!",
+      "Autoatendimento 24h sem complicação - é assim que fazemos!",
+      "Venha conhecer a experiência Olypress pessoalmente!",
+      "Inovação e conveniência a qualquer hora do dia!",
+      "Sua compra rápida e fácil, como deve ser sempre!"
+    ];
+    
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', function() {
+      atualizarRelogio();
+      setInterval(atualizarRelogio, 1000);
+      
+      if(localStorage.getItem('nomeCliente')) {
+        nomeCliente = localStorage.getItem('nomeCliente');
+        falarAssistente(`Olá de novo, ${nomeCliente}!`);
+      }
+    });
+    
+    // Funções principais
+    function iniciarExperiencia() {
+      if(!nomeCliente) {
+        nomeCliente = prompt("Qual é o seu nome?") || 'Cliente';
+        localStorage.setItem('nomeCliente', nomeCliente);
+        falarAssistente(`Bem-vindo, ${nomeCliente}!`);
+      }
+      mostrar('produtos');
+    }
+    
+    function adicionarProduto(nome, preco) {
+      carrinho.push({ nome, preco });
+      atualizarContadorSacola();
+      atualizarTooltipSacola();
+      tocarSom('som-adicionar');
+      mostrarNotificacao(`${nome} adicionado!`);
+    }
+    
+    function prepararEscaneamento() {
+      escaneados = [];
+      total = 0;
+      const div = document.getElementById('escaneamento');
+      div.innerHTML = '';
+      
+      carrinho.forEach((prod, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'produto';
+        btn.innerHTML = `<i class="fas fa-barcode"></i> ${prod.nome} - R$ ${prod.preco.toFixed(2)}`;
+        btn.onclick = () => escanearProduto(btn, prod, index);
+        div.appendChild(btn);
+      });
+      
+      document.getElementById('progresso-escaneamento').textContent = 
+        `${escaneados.length} de ${carrinho.length} produtos escaneados`;
+    }
+    
+    function escanearProduto(btn, prod, index) {
+      if (!escaneados.includes(index)) {
+        btn.innerHTML = `<i class="fas fa-barcode" style="animation: scan 1s linear;"></i> Escaneando...`;
+        
+        setTimeout(() => {
+          escaneados.push(index);
+          total += prod.preco;
+          btn.innerHTML = `<i class="fas fa-check-circle"></i> ${prod.nome} - R$ ${prod.preco.toFixed(2)}`;
+          btn.className = 'produto produto-escaneado';
+          btn.disabled = true;
+          
+          document.getElementById('progresso-escaneamento').textContent = 
+            `${escaneados.length} de ${carrinho.length} produtos escaneados`;
+          
+          tocarSom('som-escaneamento');
+          atualizarTooltipSacola();
+          
+          if (escaneados.length === carrinho.length) {
+            document.getElementById('btnPagamento').style.display = 'inline-block';
+            falarAssistente('Todos os produtos escaneados!');
+          }
+        }, 1000);
+      }
+    }
+    
+    function mostrarSacola() {
+      const sacolaDiv = document.getElementById('sacola');
+      sacolaDiv.innerHTML = '<h4 style="text-align: center; margin-bottom: 15px;">SEUS PRODUTOS:</h4>';
+      
+      carrinho.forEach((p, index) => {
+        if (escaneados.includes(index)) {
+          const item = document.createElement('div');
+          item.className = 'sacola-item';
+          item.innerHTML = `
+            <span>${p.nome}</span>
+            <span>R$ ${p.preco.toFixed(2)}</span>
+          `;
+          sacolaDiv.appendChild(item);
+        }
+      });
+      
+      // Mostrar popup de feedback após 2 segundos
+      setTimeout(mostrarFeedback, 2000);
+    }
+    
+    function mostrarFeedback() {
+      const popup = document.getElementById('feedbackPopup');
+      const frase = document.getElementById('fraseFeedback');
+      
+      // Seleciona uma frase aleatória
+      frase.textContent = frasesFeedback[Math.floor(Math.random() * frasesFeedback.length)];
+      
+      popup.style.display = 'block';
+    }
+    
+    function fecharFeedback() {
+      document.getElementById('feedbackPopup').style.display = 'none';
+    }
+    
+    function finalizarCompra(metodo) {
+      metodoPagamento = metodo;
+      document.getElementById('total-final').textContent = total.toFixed(2);
+      document.getElementById('metodo-pagamento').textContent = metodo;
+      
+      tocarSom('som-pagamento');
+      mostrar('final');
+      
+      mostrarNotificacao(`Compra finalizada via ${metodo}!`);
+      falarAssistente(`Obrigado, ${nomeCliente}! Volte sempre!`);
+    }
+    
+    function reiniciar() {
+      carrinho = [];
+      escaneados = [];
+      total = 0;
+      metodoPagamento = 'PIX';
+      atualizarContadorSacola();
+      atualizarTooltipSacola();
+      mostrar('entrada');
+      document.getElementById('feedbackPopup').style.display = 'none';
+    }
+    
+    // Funções auxiliares
+    function mostrar(tela) {
+      document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativo'));
+      document.getElementById(tela).classList.add('ativo');
+      
+      if (tela === 'caixa') prepararEscaneamento();
+      if (tela === 'final') mostrarSacola();
+      if (tela === 'pagamento') document.getElementById('total-pagamento').textContent = total.toFixed(2);
+    }
+    
+    function alternarTema() {
+      document.body.classList.toggle('light-theme');
+      const icone = document.querySelector('.btn-tema i');
+      if (document.body.classList.contains('light-theme')) {
+        icone.classList.replace('fa-moon', 'fa-sun');
+      } else {
+        icone.classList.replace('fa-sun', 'fa-moon');
+      }
+    }
+    
+    function atualizarContadorSacola() {
+      document.getElementById('contador-sacola').textContent = carrinho.length;
+    }
+    
+    function atualizarTooltipSacola() {
+      const tooltip = document.getElementById('tooltip-itens');
+      tooltip.innerHTML = carrinho.map(p => 
+        `<div style="margin: 5px 0;">${p.nome} - R$ ${p.preco.toFixed(2)}</div>`
+      ).join('') || '<div style="color: #999;">Sacola vazia</div>';
+      
+      const totalSacola = carrinho.reduce((sum, p) => sum + p.preco, 0);
+      document.getElementById('tooltip-total').textContent = totalSacola.toFixed(2);
+    }
+    
+    function mostrarNotificacao(mensagem) {
+      const notificacao = document.createElement('div');
+      notificacao.className = 'notificacao';
+      notificacao.innerHTML = `<i class="fas fa-info-circle"></i> ${mensagem}`;
+      document.body.appendChild(notificacao);
+      
+      setTimeout(() => {
+        notificacao.style.animation = 'fadeOut 0.5s forwards';
+        setTimeout(() => notificacao.remove(), 500);
+      }, 3000);
+    }
+    
+    function falarAssistente(mensagem) {
+      const balao = document.getElementById('mensagem-assistente');
+      balao.textContent = mensagem;
+      balao.style.animation = 'none';
+      void balao.offsetWidth;
+      balao.style.animation = 'fadeIn 0.5s';
+    }
+    
+    function tocarSom(id) {
+      const som = document.getElementById(id);
+      som.currentTime = 0;
+      som.play().catch(e => console.log("Som não pode ser reproduzido:", e));
+    }
+    
+    function atualizarRelogio() {
+      const agora = new Date();
+      document.getElementById('relogio').textContent = 
+        agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    }
+  
+// Accordions
+document.querySelectorAll('.accordion').forEach(btn => {
+  btn.addEventListener('click', function() {
+    this.classList.toggle("active");
+    let panel = this.nextElementSibling;
+    panel.style.display = panel.style.display === "flex" ? "none" : "flex";
+  });
+});
+
+// Marcar produto adicionado
+function adicionarProduto(nome, preco) {
+  carrinho.push({ nome, preco });
+  atualizarContadorSacola();
+  atualizarTooltipSacola();
+  tocarSom('som-adicionar');
+  mostrarNotificacao(`${nome} adicionado!`);
+
+  // Destacar visualmente
+  document.querySelectorAll('.produto').forEach(btn => {
+    if (btn.textContent.includes(nome)) {
+      btn.classList.add('adicionado');
+      btn.innerHTML = '<i class="fas fa-check-circle"></i> ' + nome + ' - R$ ' + preco.toFixed(2);
+    }
+  });
+}
+
+function mostrarSugestao() {
+  const sugestoes = {
+    'Café Solúvel': 'Pão de forma',
+    'Fini': 'KitKat',
+    'Doritos': 'Coca-Cola Lata',
+    'Suco de Uva': 'Água sem gás'
+  };
+  let sugestao = '';
+  carrinho.forEach(p => {
+    if (sugestoes[p.nome]) {
+      sugestao = sugestoes[p.nome];
+    }
+  });
+  if (sugestao) {
+    document.getElementById('sugestao-produto').textContent = 'Talvez você também goste de: ' + sugestao;
+  } else {
+    document.getElementById('sugestao-produto').textContent = '';
+  }
+}
+
+// Adiciona chamada da sugestão ao mostrar a tela final
+function mostrar(tela) {
+  document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativo'));
+  document.getElementById(tela).classList.add('ativo');
+
+  if (tela === 'caixa') prepararEscaneamento();
+  if (tela === 'final') {
+    mostrarSacola();
+    mostrarSugestao();
+  }
+  if (tela === 'pagamento') document.getElementById('total-pagamento').textContent = total.toFixed(2);
+}
+
+function copiarLink() {
+  const link = "https://nossomercadinhoolypress.github.io/Game-Nosso-Mercadinho-/"; // Substitua pelo link real do GitHub Pages
+  navigator.clipboard.writeText(link);
+  mostrarNotificacao("Link copiado para compartilhar!");
+}
+
+let tempoInicio = null;
+
+function iniciarExperiencia() {
+  if(!nomeCliente) {
+    nomeCliente = prompt("Qual é o seu nome?") || 'Cliente';
+    localStorage.setItem('nomeCliente', nomeCliente);
+    falarAssistente(`Bem-vindo, ${nomeCliente}!`);
+  }
+  tempoInicio = new Date();
+  mostrar('produtos');
+}
+
+function finalizarCompra(metodo) {
+  metodoPagamento = metodo;
+  document.getElementById('total-final').textContent = total.toFixed(2);
+  document.getElementById('metodo-pagamento').textContent = metodo;
+
+  tocarSom('som-pagamento');
+  mostrar('final');
+
+  mostrarNotificacao(`Compra finalizada via ${metodo}!`);
+  falarAssistente(`Obrigado, ${nomeCliente}! Volte sempre!`);
+
+  // Mostrar tempo da compra
+  const tempoFim = new Date();
+  const duracao = Math.floor((tempoFim - tempoInicio) / 1000);
+  const minutos = Math.floor(duracao / 60);
+  const segundos = duracao % 60;
+  const tempoFormatado = (minutos > 0 ? minutos + 'm ' : '') + segundos + 's';
+
+  document.getElementById('tempo-final').textContent = `Você concluiu sua compra em ${tempoFormatado}.`;
+
+  // Atualizar link de compartilhamento com tempo
+  const linkBase = "https://nossomercadinhoolypress.github.io/Game-Nosso-Mercadinho-/"; // substituir pelo link real
+  const texto = encodeURIComponent(`Fiz minha compra no Nosso Mercadinho Olypress em ${tempoFormatado}! Experimente também: ${linkBase}`);
+  document.querySelectorAll('.social-btn').forEach(btn => {
+    if (btn.href && btn.href.includes('wa.me')) {
+      btn.href = `https://wa.me/?text=${texto}`;
+    }
+    if (btn.href && btn.href.includes('facebook.com/sharer')) {
+      btn.href = `https://www.facebook.com/sharer/sharer.php?u=${linkBase}`;
+    }
+    if (btn.href && btn.href.includes('twitter.com/intent')) {
+      btn.href = `https://twitter.com/intent/tweet?text=${texto}&url=${linkBase}`;
+    }
+    if (btn.href && btn.href.includes('linkedin.com/sharing')) {
+      btn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${linkBase}`;
+    }
+  });
+}
+
+function compartilharOpiniao(opiniao) {
+  const linkBase = "https://nossomercadinhoolypress.github.io/Game-Nosso-Mercadinho-/"; // substitua pelo link real
+  const texto = `Acabei de comprar no Nosso Mercadinho Olypress. O que mais gostei? ${opiniao}. Você precisa experimentar também!`;
+
+  document.getElementById("whatsapp-link").href = `https://wa.me/5519996600929?text=${encodeURIComponent(texto + ' ' + linkBase)}`;
+  document.getElementById("facebook-link").href = `https://www.facebook.com/sharer/sharer.php?u=${linkBase}`;
+  document.getElementById("twitter-link").href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(texto)}&url=${linkBase}`;
+  document.getElementById("instagram-texto").value = texto + " @nossomercadinhoolypress";
+
+  document.getElementById("bloco-compartilhamento").style.display = "block";
+}
+
+function copiarTextoInstagram() {
+  const texto = document.getElementById("instagram-texto").value;
+  navigator.clipboard.writeText(texto);
+  mostrarNotificacao("Texto copiado! Agora cole no Instagram.");
+}
+
+function compartilharOpiniao(opiniao) {
+  const linkBase = "https://nossomercadinhoolypress.github.io/Game-Nosso-Mercadinho-/"; // substituir pelo link real
+  const texto = `Acabei de comprar no Nosso Mercadinho Olypress. O que mais gostei? ${opiniao}. Você precisa experimentar também!`;
+
+  document.getElementById("whatsapp-link-popup").href = `https://wa.me/5519996600929?text=${encodeURIComponent(texto + ' ' + linkBase)}`;
+  document.getElementById("facebook-link-popup").href = `https://www.facebook.com/sharer/sharer.php?u=${linkBase}`;
+  document.getElementById("twitter-link-popup").href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(texto)}&url=${linkBase}`;
+  document.getElementById("instagram-texto-popup").value = texto + " @nossomercadinhoolypress";
+
+  // Mostrar o pop-up de compartilhamento
+  document.getElementById("popup-compartilhamento").style.display = "flex";
+}
+
+function copiarTextoInstagramPopup() {
+  const texto = document.getElementById("instagram-texto-popup").value;
+  navigator.clipboard.writeText(texto);
+  mostrarNotificacao("Texto copiado! Agora cole no Instagram.");
+}
+
+function fecharPopup() {
+  document.getElementById("popup-compartilhamento").style.display = "none";
+}
+</script>
+
+<div id="popup-compartilhamento" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); color: white; z-index: 1000; text-align: center; padding-top: 50px;">
+<div style="background-color: #222; padding: 20px; border-radius: 10px; max-width: 600px; margin: auto;">
+<h3 style="font-size: 1.5em; margin-bottom: 15px;">Compartilhe sua opinião!</h3>
+<div style="margin-bottom: 20px;">
+<a class="social-btn btn-whatsapp" id="whatsapp-link-popup" target="_blank">
+<i class="fab fa-whatsapp"></i> WhatsApp
+      </a>
+<a class="social-btn btn-condominio" id="facebook-link-popup" target="_blank">
+<i class="fab fa-facebook-f"></i> Facebook
+      </a>
+<a class="social-btn btn-franquia" id="twitter-link-popup" target="_blank">
+<i class="fab fa-twitter"></i> Twitter
+      </a>
+</div>
+<textarea id="instagram-texto-popup" style="width: 90%; max-width: 400px; height: 80px; padding: 10px; border-radius: 8px;">Acabei de comprar no Nosso Mercadinho Olypress. O que mais gostei? [OPINIAO]. Você precisa experimentar também! @nossomercadinhoolypress</textarea>
+<br/>
+<button class="btn" onclick="copiarTextoInstagramPopup()">Copiar texto</button>
+<p style="font-size: 0.9em; margin-top: 10px;">Cole nos seus Stories ou envie por Direct no Instagram e marque <strong>@nossomercadinhoolypress</strong></p>
+<button class="btn" onclick="fecharPopup()">Fechar</button>
+</div>
+</div>
+</body>
+</html>
